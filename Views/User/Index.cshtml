@@ -1,0 +1,86 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Users";
+}
+@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<Edunext.Models.User>
+<!--Section Search-->
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="p-3 bg-light rounded shadow-sm">
+                <!-- Ô nhập tìm kiếm -->
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="searchString" placeholder="Search By Email, Code..."
+                               value="@ViewData["CurrentFilter"]">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+        </form>
+
+    </div>
+</div>
+<!--Create new user button-->
+<div class="row">
+    <div class="col-md-12">
+        <a asp-action="Create" asp-controller="User" class="btn btn-primary">Create New User</a>
+    </div>
+</div>
+
+@{
+    if(Model.Count() == 0)
+    {
+        <div class="alert alert-info text-center">
+            No users found.
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center">Users List</h2>
+        <div class="d-flex justify-content-center">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+           {
+               Display = PagedListDisplayMode.IfNeeded, // Chỉ hiển thị khi cần
+               UlElementClasses = new string[] { "pagination", "pagination-lg" }, // Cỡ lớn
+               LiElementClasses = new string[] { "page-item" },
+               PageClasses = new string[] { "page-link" }, // Áp dụng CSS cho thẻ <a>
+               LinkToPreviousPageFormat = "«", // Nút "trước"
+               LinkToNextPageFormat = "»", // Nút "sau"
+               MaximumPageNumbersToDisplay = 5 // Giới hạn số trang hiển thị
+           })
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Code</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Code</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="User" asp-route-id="@user.Id">Edit</a> |
+                            <a asp-action="Delete" asp-controller="User" asp-route-id="@user.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+

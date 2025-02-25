@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Login";
+}
+@model User
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Message"]
+    </div>
+}
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h3 class="text-center mb-4">Login</h3>
+        <form method="post" asp-controller="User" asp-action="Login">
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" asp-for="@Model.Email" id="email" name="Email" class="form-control" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" asp-for="@Model.Password" id="password" name="Password" class="form-control" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <div class="text-danger text-center mt-2">@ViewBag.Message</div>
+        </form>
+        <div class="text-center mt-3">
+            <a asp-controller="User" asp-action="Register" class="text-decoration-none">Register</a> |
+            <a asp-controller="User" asp-action="ResetPassword" class="text-decoration-none">Forgot Password?</a>
+        </div>
+    </div>
+</div>
+
+
+
