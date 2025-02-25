@@ -2,20 +2,20 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create new user";
 }
 @model User
 <div class="container d-flex justify-content-center align-items-center">
     <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
         <h3 class="text-center mb-4">Register</h3>
-        <form method="post" asp-controller="User" asp-action="Register">
+        <form method="post" asp-controller="User" asp-action="Create">
             <div class="mb-3">
                 <label for="firstName" class="form-label">First Name</label>
-                <input type="text" asp-for="@Model.FirstName" id="firstName" name="FirstName" class="form-control" placeholder="Enter your first name" required>
+                <input type="text" asp-for="@Model.FirstName" id="firstName" name="FirstName" class="form-control" placeholder="Enter first name" required>
             </div>
             <div class="mb-3">
                 <label for="lastName" class="form-label">Last Name</label>
-                <input type="text" asp-for="@Model.LastName" id="lastName" name="LastName" class="form-control" placeholder="Enter your last name" required>
+                <input type="text" asp-for="@Model.LastName" id="lastName" name="LastName" class="form-control" placeholder="Enter last name" required>
             </div>
             <div class="mb-3">
                 <label for="lastName" class="form-label">Code</label>
@@ -26,6 +26,7 @@
                 <select asp-for="@Model.Role" id="role" name="Role" class="form-select" required>
                     <option value="1">Student</option>
                     <option value="2">Teacher</option>
+                    <option value="3">Staff</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -40,13 +41,9 @@
                 <label for="confirmPassword" class="form-label">Confirm Password</label>
                 <input type="password" id="confirmPassword" name="ConfirmPassword" class="form-control" placeholder="Confirm your password" required>
             </div>
-            <button type="button" onclick="checkConfirmPassword()" class="btn btn-primary w-100">Register</button>
+            <button type="button" onclick="checkConfirmPassword()" class="btn btn-primary w-100">Create</button>
             <div class="text-danger text-center mt-2">@ViewBag.Message</div>
         </form>
-        <div class="text-center mt-3">
-            Already have an account?
-            <a asp-controller="User" asp-action="Login" class="text-decoration-none">Login</a>
-        </div>
     </div>
 </div>
 
