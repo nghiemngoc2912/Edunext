@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Create Course";
+}
+@model Course
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h3 class="text-center mb-4">Create Course</h3>
+        <form method="post" asp-controller="Course" asp-action="Create">
+            <div class="mb-3">
+                <label for="code" class="form-label">Code</label>
+                <input type="text" asp-for="@Model.Code" id="code" name="Code" class="form-control" placeholder="Enter code" required>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" asp-for="@Model.Name" id="name" name="Name" class="form-control" placeholder="Enter name" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" asp-for="@Model.Description" id="description" name="Description" class="form-control" placeholder="Enter description">
+            </div>
+            <button class="btn btn-primary w-100">Create</button>
+            <div class="text-danger text-center mt-2">@ViewBag.Message</div>
+        </form>
+    </div>
+</div>
