@@ -1,3 +1,4 @@
+﻿using Edunext.Helpers;
 using Edunext.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ namespace Edunext
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<EmailHelper>();
+
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout duration

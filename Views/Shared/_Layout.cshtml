@@ -27,14 +27,14 @@
                             if (role !=null)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Details">My Account</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Details" asp-route-id="@id">My Account</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
                                 </li>
                                 if(role==1||role==2){
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Class" asp-action="Index" asp-route-userId="@id">My Classes</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Class" asp-action="Index" asp-route-id="@id">My Classes</a>
                                     </li>
                                 }
                                 else
