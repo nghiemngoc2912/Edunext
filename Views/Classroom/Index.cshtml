@@ -22,6 +22,7 @@
                 <tr>
                     <th>Class Name</th>
                     <th>Course Code</th>
+                    <th>Teacher</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Actions</th>
@@ -33,24 +34,12 @@
                     <tr>
                         <td>@classroom.Name</td>
                         <td>@classroom.Course.Code</td>
-                        
+                        <td>@classroom.Teacher.LastName @classroom.Teacher.FirstName</td>
+                        <td>@classroom.Semester.StartDate</td>
+                        <td>@classroom.Semester.EndDate</td>
                     </tr>
                 }
             </tbody>
         </table>
     }
-}
-<form method="post" asp-action="Create" asp-controller="ClassEnrollment">
-    <!--Enroll class by input class name-->
-    <div class="form-group">
-        <label for="ClassName">Class Name</label>
-        <input type="text" class="form-control" value="@ViewBag.ClassName" id="ClassName" name="ClassName" placeholder="Enter class name">
-    </div>
-    <button type="submit" class="btn btn-primary">Enroll</button>
-</form>
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-danger text-center">
-        @TempData["Message"]
-    </div>
 }

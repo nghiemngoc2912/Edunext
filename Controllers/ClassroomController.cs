@@ -7,18 +7,9 @@ namespace Edunext.Controllers
     public class ClassroomController : Controller
     {
         EdunextContext context = new EdunextContext();
-        public IActionResult Index(int userId)
+        public IActionResult Index()
         {
-            var classes = context.ClassEnrollments
-                .Where(e => e.UserId == userId)
-                .Include(e => e.Class) // Nạp thông tin lớp học
-                    .ThenInclude(c => c.Course)
-                .Select(e => new {
-                    Class=e.Class,
-                    Semester=e.Class.Semester
-                }
-                    )
-                .ToList();
+            var classes=context.Classrooms.Include(c=>c.Semester).Include(c=>c.Teacher).Include(c=>c.Course).Where(c=>c.IsDeleted==false).ToList();
             return View(classes);
         }
     }
