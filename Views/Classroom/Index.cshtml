@@ -2,10 +2,32 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Classrooms";
+    ViewData["Title"] = "Classrooms List";
 }
-@model IEnumerable<Classroom>
+@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<Edunext.Models.Classroom>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="p-3 bg-light rounded shadow-sm">
+            <!-- Ô nhập tìm kiếm -->
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="searchString" placeholder="Search By Name"
+                           value="@ViewData["CurrentFilter"]">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i> Tìm kiếm
+                    </button>
+                </div>
+            </div>
+        </form>
 
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <a asp-action="Create" asp-controller="Classroom" class="btn btn-primary">Create New Classroom</a>
+    </div>
+</div>
 @{
     if (Model.Count() == 0)
     {
@@ -16,7 +38,18 @@
     else
     {
         <h2 class="text-center">Classes List</h2>
-
+        <div class="d-flex justify-content-center">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = @ViewData["CurrentFilter"] }), new PagedListRenderOptions
+   {
+       Display = PagedListDisplayMode.IfNeeded, // Chỉ hiển thị khi cần
+       UlElementClasses = new string[] { "pagination", "pagination-lg" }, // Cỡ lớn
+       LiElementClasses = new string[] { "page-item" },
+       PageClasses = new string[] { "page-link" }, // Áp dụng CSS cho thẻ <a>
+       LinkToPreviousPageFormat = "«", // Nút "trước"
+       LinkToNextPageFormat = "»", // Nút "sau"
+       MaximumPageNumbersToDisplay = 5 // Giới hạn số trang hiển thị
+   })
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -37,9 +70,20 @@
                         <td>@classroom.Teacher.LastName @classroom.Teacher.FirstName</td>
                         <td>@classroom.Semester.StartDate</td>
                         <td>@classroom.Semester.EndDate</td>
+                        <td>
+                            <a asp-action="Index" asp-controller="ClassEnrollment" asp-route-classroomId="@classroom.Id">Students in class</a> |
+                            <a asp-action="Edit" asp-route-id="@classroom.Id">Edit</a> |
+                            <a onclick="confirmDelete('@classroom.Id')" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
     }
-}
+}<script>
+     function confirmDelete(id) {
+         if (confirm("Are you sure you want to delete this classroom?")) {
+             window.location.href = "/Classroom/Delete/" + id;
+         }
+     }
+</script>

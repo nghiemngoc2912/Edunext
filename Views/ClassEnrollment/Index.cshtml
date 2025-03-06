@@ -1,0 +1,93 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Students in Class";
+}
+@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<Edunext.Models.ClassEnrollment>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Message"]
+    </div>
+}
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" enctype="multipart/form-data" asp-action="CreateEnrollments" asp-route-classroomId="@Model.ElementAt(0).ClassId">
+            <input type="file" name="file" accept=".xlsx" required />
+            <button type="submit">Enroll new students</button>
+        </form>
+    </div>
+</div>
+@{
+    if (Model.Count() == 0)
+    {
+        <div class="alert alert-info text-center">
+            No students found.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="Index" method="get" class="p-3 bg-light rounded shadow-sm">
+                    <input type="hidden" value="@Model.ElementAt(0).ClassId" name="classroomId" />
+                    <!-- Ô nhập tìm kiếm -->
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="searchString" placeholder="Search By Student Name, Email"
+                                   value="@ViewData["CurrentFilter"]">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <h2 class="text-center">Students List</h2>
+        <div class="d-flex justify-content-center">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = @ViewData["CurrentFilter"] }), new PagedListRenderOptions
+   {
+       Display = PagedListDisplayMode.IfNeeded, // Chỉ hiển thị khi cần
+       UlElementClasses = new string[] { "pagination", "pagination-lg" }, // Cỡ lớn
+       LiElementClasses = new string[] { "page-item" },
+       PageClasses = new string[] { "page-link" }, // Áp dụng CSS cho thẻ <a>
+       LinkToPreviousPageFormat = "«", // Nút "trước"
+       LinkToNextPageFormat = "»", // Nút "sau"
+       MaximumPageNumbersToDisplay = 5 // Giới hạn số trang hiển thị
+   })
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student Code</th>
+                    <th>Student Name</th>
+                    <th>Student Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var classEnrollment in Model)
+                {
+                    <tr>
+                        <td>@classEnrollment.User.Code</td>
+                        <td>@classEnrollment.User.LastName @classEnrollment.User.FirstName</td>
+                        <td>@classEnrollment.User.Email</td>
+                        <td>
+                            <a onclick="confirmDelete('@classEnrollment.Id')" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}<script>
+     function confirmDelete(id) {
+         if (confirm("Are you sure you want to unenroll this students?")) {
+             window.location.href = "/ClassEnrollment/Delete/" + id;
+         }
+     }
+</script>
