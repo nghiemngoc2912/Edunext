@@ -8,6 +8,20 @@
 @model X.PagedList.IPagedList<Edunext.Models.Classroom>
 <div class="row">
     <div class="col-md-12">
+        <form method="post" enctype="multipart/form-data" asp-action="CreateClasses">
+            <input type="file" name="file" accept=".xlsx" required />
+            <button type="submit">Create new class</button>
+        </form>
+    </div>
+</div>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Message"]
+    </div>
+}
+<div class="row">
+    <div class="col-md-12">
         <form asp-action="Index" method="get" class="p-3 bg-light rounded shadow-sm">
             <!-- Ô nhập tìm kiếm -->
             <div class="col-md-6">
@@ -56,8 +70,7 @@
                     <th>Class Name</th>
                     <th>Course Code</th>
                     <th>Teacher</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                    <th>Semester</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -68,8 +81,7 @@
                         <td>@classroom.Name</td>
                         <td>@classroom.Course.Code</td>
                         <td>@classroom.Teacher.LastName @classroom.Teacher.FirstName</td>
-                        <td>@classroom.Semester.StartDate</td>
-                        <td>@classroom.Semester.EndDate</td>
+                        <td>@classroom.Semester.Name</td>
                         <td>
                             <a asp-action="Index" asp-controller="ClassEnrollment" asp-route-classroomId="@classroom.Id">Students in class</a> |
                             <a asp-action="Edit" asp-route-id="@classroom.Id">Edit</a> |

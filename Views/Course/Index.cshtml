@@ -75,6 +75,7 @@
                         <td>@course.Code</td>
                         <td>@course.Description</td>
                         <td>
+                            <a asp-controller="Slot" asp-action="Index" asp-route-courseId="@course.Id">Slots List</a> |
                             <a asp-action="Edit" asp-route-id="@course.Id">Edit</a> |
                             <a onclick="confirmDelete('@course.Id')" class="btn btn-sm btn-danger">Delete</a>
                         </td>

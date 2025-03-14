@@ -196,7 +196,7 @@ INSERT INTO comments (question_id, user_id, content) VALUES
 INSERT INTO assignments (title, description, due_date,class_slot_id) VALUES
 (N'Bài tập 1 - Viết chương trình Hello World', N'Tạo chương trình Java in ra dòng chữ Hello World.', '2025-01-20',1),
 (N'Bài tập 2 - Lệnh if-else', N'Viết chương trình kiểm tra số chẵn lẻ trong Java.', '2025-01-22',2),
-(N'Bài tập 1 - Truy vấn SQL', N'Viết câu lệnh SELECT lấy tất cả dữ liệu từ bảng students.', '2025-08-25',3);
+(N'Bài tập 1 - Truy vấn SQL', N'Viết câu lệnh SELECT lấy tất cả dữ liệu từ bảng slots.', '2025-08-25',3);
 
 INSERT INTO assignment_submissions (assignment_id,user_id, submission_date, file_link, grade, feedback) VALUES
 (2,4, '2025-01-19', 'link2.com', 8.0, N'Khá ổn nhưng cần cải thiện.'),

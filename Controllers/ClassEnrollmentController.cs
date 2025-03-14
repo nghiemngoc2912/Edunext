@@ -133,7 +133,7 @@ namespace Edunext.Controllers
         // Hàm lưu file lỗi
         private string SaveErrorLog(List<string> errors)
         {
-            string errorFileName = $"ImportErrors_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+            string errorFileName = $"ImportClassEnrollmentErrors_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
             string errorFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "logs", errorFileName);
 
             if (!Directory.Exists(Path.GetDirectoryName(errorFilePath)))

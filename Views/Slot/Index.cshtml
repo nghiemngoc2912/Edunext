@@ -2,10 +2,10 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Students in Class";
+    ViewData["Title"] = "Slots List";
 }
 @using X.PagedList.Mvc.Core;
-@model X.PagedList.IPagedList<Edunext.Models.ClassEnrollment>
+@model X.PagedList.IPagedList<Edunext.Models.Slot>
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-success text-center">
@@ -14,9 +14,9 @@
 }
 <div class="row">
     <div class="col-md-12">
-        <form method="post" enctype="multipart/form-data" asp-action="CreateEnrollments" asp-route-classroomId="@Model.ElementAt(0).ClassId">
+        <form method="post" enctype="multipart/form-data" asp-action="Create" asp-route-courseId="@ViewBag.CourseId">
             <input type="file" name="file" accept=".xlsx" required />
-            <button type="submit">Enroll new slots</button>
+            <button type="submit">Create new slots</button>
         </form>
     </div>
 </div>
@@ -32,11 +32,11 @@
         <div class="row">
             <div class="col-md-12">
                 <form asp-action="Index" method="get" class="p-3 bg-light rounded shadow-sm">
-                    <input type="hidden" value="@Model.ElementAt(0).ClassId" name="classroomId" />
+                    <input type="hidden" value="@Model.ElementAt(0).CourseId" name="courseId" />
                     <!-- Ô nhập tìm kiếm -->
                     <div class="col-md-6">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="searchString" placeholder="Search By Student Name, Email"
+                            <input type="text" class="form-control" name="searchString" placeholder="Search By Name"
                                    value="@ViewData["CurrentFilter"]">
                             <button class="btn btn-primary" type="submit">
                                 <i class="fas fa-search"></i> Tìm kiếm
@@ -47,7 +47,7 @@
 
             </div>
         </div>
-        <h2 class="text-center">Students List</h2>
+        <h2 class="text-center">Slots List</h2>
         <div class="d-flex justify-content-center">
             @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = @ViewData["CurrentFilter"] }), new PagedListRenderOptions
    {
@@ -63,21 +63,20 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Student Code</th>
-                    <th>Student Name</th>
-                    <th>Student Email</th>
+                    <th>Slot Order</th>
+                    <th>Slot Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var classEnrollment in Model)
+                @foreach (var slot in Model)
                 {
                     <tr>
-                        <td>@classEnrollment.User.Code</td>
-                        <td>@classEnrollment.User.LastName @classEnrollment.User.FirstName</td>
-                        <td>@classEnrollment.User.Email</td>
+                        <td>@slot.Order</td>
+                        <td>@slot.Name</td>
                         <td>
-                            <a onclick="confirmDelete('@classEnrollment.Id')" class="btn btn-sm btn-danger">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@slot.Id" class="btn btn-sm btn-info">Update</a>
+                            <a onclick="confirmDelete('@slot.Id','@slot.CourseId')" class="btn btn-sm btn-danger">Delete</a>
                         </td>
                     </tr>
                 }
@@ -85,9 +84,9 @@
         </table>
     }
 }<script>
-     function confirmDelete(id) {
+     function confirmDelete(id,courseId) {
          if (confirm("Are you sure you want to unenroll this slots?")) {
-             window.location.href = "/ClassEnrollment/Delete/" + id;
+             window.location.href = "/Slot/Delete?id=" + id+"&courseId="+courseId;
          }
      }
 </script>
