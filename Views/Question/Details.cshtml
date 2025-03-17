@@ -1,0 +1,169 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Question Details"; 
+}
+@model Edunext.Models.Question
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Message"]
+    </div>
+}
+@{
+    if (Model == null)
+    {
+        <div class="alert alert-info text-center">
+            No question found.
+        </div>
+    }
+    else
+    {
+        <h2 class="text-center">Question Details</h2>
+        <div class="card shadow-lg p-4 mb-4">
+            <div class="card-header bg-primary text-white text-center">
+                <h3 class="mb-0">Question Details</h3>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <p class="mb-1"><strong>📌 Question:</strong> @Model.Content</p>
+                    </div>
+                </div>
+
+                @{
+                    string statusText = Model.Status switch
+                    {
+                        0 => "Not Started",
+                        1 => "Started",
+                        2 => "Closed",
+                        _ => "Unknown"
+                    };
+                    string statusClass = Model.Status switch
+                    {
+                        0 => "secondary",
+                        1 => "success",
+                        2 => "danger",
+                        _ => "dark"
+                    };
+                }
+
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <p><strong>⏳ From:</strong> @Model.FromTime.ToString("yyyy-MM-dd HH:mm")</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>⏳ To:</strong> @Model.ToTime.ToString("yyyy-MM-dd HH:mm")</p>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="badge bg-@statusClass fs-6 p-2">📢 Status: @statusText</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if(Model.Status == 1)
+        {
+            <div class="card shadow-lg p-4 mb-4">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Answer</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Comment" asp-action="Create">
+                        <input type="hidden" name="questionId" value="@Model.Id" />
+                        <input type="hidden" name="userId" value="@Context.Session.GetInt32("UserId")" />
+                        <textarea name="content" class="form-control" placeholder="Enter your answer here" required value="@ViewBag.answer"></textarea>
+                        <button type="submit" class="btn btn-primary">Answer</button>
+                    </form>
+                </div>
+            </div>
+        }
+        
+        <h3>Comments List</h3>
+        <div class="d-flex justify-content-center">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <tr id="row-@comment.Id">
+                            <td>@comment.User.FirstName @comment.User.LastName</td>
+                            <td id="content-@comment.Id">@comment.Content</td>
+                            <td>
+                                @if (Context.Session.GetInt32("UserId") == comment.UserId)
+                                {
+                                    <button onclick="editComment(@comment.Id)" class="btn btn-sm btn-warning">Edit</button>
+                                    <button onclick="saveComment(@comment.Id)" class="btn btn-sm btn-success" style="display: none;">Save</button>
+                                    <button onclick="confirmDelete(@comment.Id)" class="btn btn-sm btn-danger">Delete</button>
+                                }
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+<script>
+    function editComment(commentId) {
+        console.log("Đang chỉnh sửa commentId:", commentId);
+
+        let contentTd = document.getElementById(`content-${commentId}`);
+        let editButton = document.querySelector(`#row-${commentId} .btn-warning`);
+        let saveButton = document.querySelector(`#row-${commentId} .btn-success`);
+
+        console.log("contentTd:", contentTd);
+        console.log("editButton:", editButton);
+        console.log("saveButton:", saveButton);
+
+        if (!contentTd || !editButton || !saveButton) {
+            console.error("Không tìm thấy phần tử cần chỉnh sửa.");
+            return;
+        }
+
+        let oldContent = contentTd.innerText;
+        contentTd.innerHTML = `<input type='text' id='input-${commentId}' class='form-control' value='${oldContent}'>`;
+
+        editButton.style.display = "none";
+        saveButton.style.display = "inline-block";
+    }
+
+
+    function saveComment(commentId) {
+        let newContent = document.getElementById(`input-${commentId}`).value;
+
+        // Gửi AJAX request để cập nhật dữ liệu lên server
+        fetch(`/Comment/Edit`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "RequestVerificationToken": document.querySelector("input[name='__RequestVerificationToken']").value
+            },
+            body: JSON.stringify({ Id: commentId, Content: newContent})
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật lại giao diện
+                    document.getElementById(`content-${commentId}`).innerText = newContent;
+                    // Hiển thị lại nút "Edit", ẩn nút "Save"
+                    document.querySelector(`#row-${commentId} .btn-warning`).style.display = "inline-block";
+                    document.querySelector(`#row-${commentId} .btn-success`).style.display = "none";
+                } else {
+                    alert("Có lỗi xảy ra!");
+                }
+            });
+    }
+    function confirmDelete(id) {
+        if(confirm("Are you sure you want to delete this comment?")) {
+            window.location.href = "/Comment/Delete/" + id;
+        }
+    }
+</script>
+

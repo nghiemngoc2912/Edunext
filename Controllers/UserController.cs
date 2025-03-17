@@ -112,7 +112,7 @@ namespace Edunext.Controllers
             User user2 = context.Users.Where(u => u.Code == user.Code).FirstOrDefault();
             if (user2 != null)
             {
-                this.ViewBag.Message = "Code already exists";
+                this.ViewBag.Message = "Title already exists";
                 return View(user);
             }
             //check email already exists
@@ -261,14 +261,14 @@ namespace Edunext.Controllers
             }
             if (!ValidationHelper.CheckInputNotSpace(user.Code))
             {
-                this.ViewBag.Message = "Code cannot be null or space";
+                this.ViewBag.Message = "Title cannot be null or space";
                 return View(user);
             }
             //check code exists
             User user2 = context.Users.Where(u => u.Code == user.Code).FirstOrDefault();
             if (user2 != null&&user2.Id!=user.Id)
             {
-                this.ViewBag.Message = "Code already exists";
+                this.ViewBag.Message = "Title already exists";
                 return View(user);
             }
 

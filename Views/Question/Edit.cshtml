@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Edit Question";
+}
+@model Question
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h3 class="text-center mb-4">Edit Question</h3>
+        <form method="post" asp-controller="Question" asp-action="Edit">
+            <input type="hidden" name="ClassSlotId" asp-for="@Model.ClassSlotId" />
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <input type="text" asp-for="@Model.Content" id="content" name="Content" class="form-control" placeholder="Enter content">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Status</label>
+                <select asp-for="@Model.Status" name="Status">
+                    <option value="0" selected="@(0==Model.Status)">Not Start</option>
+                    <option value="1" selected="@(1==Model.Status)">Started</option>
+                    <option value="2" selected="@(2==Model.Status)">Closed</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="fromTime" class="form-label">From Time</label>
+                <input type="text" asp-for="@Model.FromTime" id="fromTime" name="FromTime" class="form-control" placeholder="Enter from time" required>
+            </div>
+            <div class="mb-3">
+                <label for="toTime" class="form-label">To Time</label>
+                <input type="text" asp-for="@Model.ToTime" id="toTime" name="ToTime" class="form-control" placeholder="Enter to time" required>
+            </div>
+            <button class="btn btn-primary w-100">Edit</button>
+            <div class="text-danger text-center mt-2">@ViewBag.Message</div>
+        </form>
+    </div>
+</div>

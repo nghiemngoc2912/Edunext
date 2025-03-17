@@ -9,7 +9,7 @@
     <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
         <h3 class="text-center mb-4">Edit User</h3>
         <form method="post" asp-controller="User" asp-action="Edit">
-            <input type="text" asp-for="@Model.Id">
+            <input type="hidden" asp-for="@Model.Id">
             <div class="mb-3">
                 <label for="firstName" class="form-label">First Name</label>
                 <input type="text" asp-for="@Model.FirstName" id="firstName" name="FirstName" class="form-control" placeholder="Enter your first name" required>

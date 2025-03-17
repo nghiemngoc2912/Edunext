@@ -1261,19 +1261,19 @@ $.validator.addMethod( "postalcodeBR", function( cep_value, element ) {
 }, "Informe um CEP válido." );
 
 /**
- * Matches a valid Canadian Postal Code
+ * Matches a valid Canadian Postal Title
  *
- * @example jQuery.validator.methods.postalCodeCA( "H0H 0H0", element )
+ * @example jQuery.validator.methods.postalTitleCA( "H0H 0H0", element )
  * @result true
  *
- * @example jQuery.validator.methods.postalCodeCA( "H0H0H0", element )
+ * @example jQuery.validator.methods.postalTitleCA( "H0H0H0", element )
  * @result false
  *
- * @name jQuery.validator.methods.postalCodeCA
+ * @name jQuery.validator.methods.postalTitleCA
  * @type Boolean
  * @cat Plugins/Validate/Methods
  */
-$.validator.addMethod( "postalCodeCA", function( value, element ) {
+$.validator.addMethod( "postalTitleCA", function( value, element ) {
 	return this.optional( element ) || /^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ] *\d[ABCEGHJKLMNPRSTVWXYZ]\d$/i.test( value );
 }, "Please specify a valid postal code." );
 
@@ -1503,7 +1503,7 @@ $.validator.addMethod( "vinUS", function( v ) {
 
 $.validator.addMethod( "zipcodeUS", function( value, element ) {
 	return this.optional( element ) || /^\d{5}(-\d{4})?$/.test( value );
-}, "The specified US ZIP Code is invalid." );
+}, "The specified US ZIP Title is invalid." );
 
 $.validator.addMethod( "ziprange", function( value, element ) {
 	return this.optional( element ) || /^90[2-5]\d\{2\}-\d{4}$/.test( value );

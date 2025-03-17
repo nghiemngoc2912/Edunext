@@ -196,11 +196,11 @@ public partial class EdunextContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__comments__E795768748091A60");
+            entity.HasKey(e => e.Id).HasName("PK__comments__E795768748091A60");
 
             entity.ToTable("comments");
 
-            entity.Property(e => e.CommentId).HasColumnName("comment_id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.QuestionId).HasColumnName("question_id");
             entity.Property(e => e.UpdatedAt)

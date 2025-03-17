@@ -93,7 +93,7 @@ namespace Edunext.Controllers
                                 Course course = context.Courses.FirstOrDefault(c => c.Code == courseCode);
                                 if (course == null)
                                 {
-                                    errorList.Add($"Row {row}: Course Code {courseCode} is not found.");
+                                    errorList.Add($"Row {row}: Course Title {courseCode} is not found.");
                                     continue;
                                 }
                                 string semesterName = worksheet.Cells[row, 3].Value?.ToString()?.Trim();
@@ -105,7 +105,7 @@ namespace Edunext.Controllers
                                 Semester semester = context.Semesters.FirstOrDefault(c => c.Name == semesterName);
                                 if (semester == null)
                                 {
-                                    errorList.Add($"Row {row}: Semester Code {semesterName} is not found.");
+                                    errorList.Add($"Row {row}: Semester Name {semesterName} is not found.");
                                     continue;
                                 }
                                 string teacherCode = worksheet.Cells[row, 4].Value?.ToString()?.Trim();
@@ -114,10 +114,10 @@ namespace Edunext.Controllers
                                     errorList.Add($"Row {row}: Teacher Code is missing.");
                                     continue;
                                 }
-                                User teacher = context.Users.FirstOrDefault(c => c.Code == teacherCode&&c.Role==2);
+                                User teacher = context.Users.FirstOrDefault(c => c.Code == teacherCode && c.Role==2);
                                 if (teacher == null)
                                 {
-                                    errorList.Add($"Row {row}: Teacher Code {teacherCode} is not found.");
+                                    errorList.Add($"Row {row}: Teacher Title {teacherCode} is not found.");
                                     continue;
                                 }
                                 //check if class exist with same class name, course, semester

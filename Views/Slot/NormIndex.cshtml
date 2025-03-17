@@ -12,14 +12,6 @@
         @TempData["Message"]
     </div>
 }
-<div class="row">
-    <div class="col-md-12">
-        <form method="post" enctype="multipart/form-data" asp-action="Create" asp-route-courseId="@ViewBag.CourseId">
-            <input type="file" name="file" accept=".xlsx" required />
-            <button type="submit">Create new slots</button>
-        </form>
-    </div>
-</div>
 @{
     if (Model.Count() == 0)
     {
@@ -31,8 +23,8 @@
     {
         <div class="row">
             <div class="col-md-12">
-                <form asp-action="NormIndex" method="get" class="p-3 bg-light rounded shadow-sm">
-                    <input type="hidden" value="@ViewBag.CourseId" name="courseId" />
+                <form asp-action="Index" method="get" class="p-3 bg-light rounded shadow-sm">
+                    <input type="hidden" value="ViewBag.classId" name="classId" />
                     <!-- Ô nhập tìm kiếm -->
                     <div class="col-md-6">
                         <div class="input-group">
@@ -75,7 +67,7 @@
                         <td>@slot.Order</td>
                         <td>@slot.Name</td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@slot.Id" class="btn btn-sm btn-info">Edit</a>
+                            <a asp-route-classId="@ViewBag.classId" asp-controller="ClassSlotContent" asp-action="Details" asp-route-slotId="@slot.Id" class="btn btn-sm btn-info">Detail</a>
                         </td>
                     </tr>
                 }

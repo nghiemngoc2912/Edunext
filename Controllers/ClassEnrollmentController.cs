@@ -68,7 +68,7 @@ namespace Edunext.Controllers
                                 // Kiểm tra trùng lặp trong file Excel
                                 if (excelUserCodes.Contains(userCode))
                                 {
-                                    errorList.Add($"Row {row}: User Code {userCode} is duplicated in the Excel file.");
+                                    errorList.Add($"Row {row}: User Title {userCode} is duplicated in the Excel file.");
                                     continue;
                                 }
                                 excelUserCodes.Add(userCode);

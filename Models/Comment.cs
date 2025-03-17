@@ -5,7 +5,7 @@ namespace Edunext.Models;
 
 public partial class Comment
 {
-    public int CommentId { get; set; }
+    public int Id { get; set; }
 
     public int QuestionId { get; set; }
 

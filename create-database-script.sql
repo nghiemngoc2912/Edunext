@@ -92,7 +92,7 @@ CREATE TABLE questions (
 );
 
 CREATE TABLE comments (
-    comment_id INT IDENTITY(1,1) PRIMARY KEY, 
+    id INT IDENTITY(1,1) PRIMARY KEY, 
     question_id INT NOT NULL, 
     user_id INT NOT NULL, 
     content NVARCHAR(MAX) NOT NULL, 

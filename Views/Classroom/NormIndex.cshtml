@@ -49,9 +49,10 @@
             <thead>
                 <tr>
                     <th>Class Name</th>
-                    <th>Course Code</th>
+                    <th>Course Title</th>
                     <th>Teacher</th>
                     <th>Semester</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,6 +63,9 @@
                         <td>@classroom.Course.Code</td>
                         <td>@classroom.Teacher.LastName @classroom.Teacher.FirstName</td>
                         <td>@classroom.Semester.Name</td>
+                        <td>
+                            <a asp-controller="Slot" asp-action="NormIndex" asp-route-classId="@classroom.Id" class="btn btn-primary">Slots List</a>
+                        </td>
                     </tr>
                 }
             </tbody>

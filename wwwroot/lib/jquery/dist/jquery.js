@@ -685,15 +685,15 @@ var i,
 			// For values outside the Basic Multilingual Plane (BMP), manually construct a
 			// surrogate pair
 			high < 0 ?
-				String.fromCharCode( high + 0x10000 ) :
-				String.fromCharCode( high >> 10 | 0xD800, high & 0x3FF | 0xDC00 );
+				String.fromCharTitle( high + 0x10000 ) :
+				String.fromCharTitle( high >> 10 | 0xD800, high & 0x3FF | 0xDC00 );
 	},
 
 	// CSS string/identifier serialization
 	// https://drafts.csswg.org/cssom/#common-serializing-idioms
 	rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,
-	fcssescape = function( ch, asCodePoint ) {
-		if ( asCodePoint ) {
+	fcssescape = function( ch, asTitlePoint ) {
+		if ( asTitlePoint ) {
 
 			// U+0000 NULL becomes U+FFFD REPLACEMENT CHARACTER
 			if ( ch === "\0" ) {
@@ -702,7 +702,7 @@ var i,
 
 			// Control characters and (dependent upon position) numbers get escaped as code points
 			return ch.slice( 0, -1 ) + "\\" +
-				ch.charCodeAt( ch.length - 1 ).toString( 16 ) + " ";
+				ch.charTitleAt( ch.length - 1 ).toString( 16 ) + " ";
 		}
 
 		// Other potentially-special ASCII characters get backslash-escaped
@@ -5812,9 +5812,9 @@ jQuery.each( {
 	view: true,
 	"char": true,
 	code: true,
-	charCode: true,
+	charTitle: true,
 	key: true,
-	keyCode: true,
+	keyTitle: true,
 	button: true,
 	buttons: true,
 	clientX: true,
@@ -9430,7 +9430,7 @@ jQuery.extend( {
 			completeDeferred = jQuery.Callbacks( "once memory" ),
 
 			// Status-dependent callbacks
-			statusCode = s.statusCode || {},
+			statusTitle = s.statusTitle || {},
 
 			// Headers (they are sent all at once)
 			requestHeaders = {},
@@ -9484,7 +9484,7 @@ jQuery.extend( {
 				},
 
 				// Status-dependent callbacks
-				statusCode: function( map ) {
+				statusTitle: function( map ) {
 					var code;
 					if ( map ) {
 						if ( completed ) {
@@ -9495,7 +9495,7 @@ jQuery.extend( {
 
 							// Lazy-add the new callbacks in a way that preserves old ones
 							for ( code in map ) {
-								statusCode[ code ] = [ statusCode[ code ], map[ code ] ];
+								statusTitle[ code ] = [ statusTitle[ code ], map[ code ] ];
 							}
 						}
 					}
@@ -9799,8 +9799,8 @@ jQuery.extend( {
 			}
 
 			// Status-dependent callbacks
-			jqXHR.statusCode( statusCode );
-			statusCode = undefined;
+			jqXHR.statusTitle( statusTitle );
+			statusTitle = undefined;
 
 			if ( fireGlobals ) {
 				globalEventContext.trigger( isSuccess ? "ajaxSuccess" : "ajaxError",

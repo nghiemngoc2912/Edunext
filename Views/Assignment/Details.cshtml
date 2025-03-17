@@ -1,0 +1,137 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Assignment Details";
+}
+@model Edunext.Models.Assignment
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Message"]
+    </div>
+}
+@{
+    if (Model == null)
+    {
+            <div class="alert alert-info text-center">
+                No assignment found.
+            </div>
+    }
+    else
+    {
+            <h2 class="text-center">Assignment Details</h2>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <p class="mb-1"><strong>📌 Assignment:</strong> @Model.Title</p>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <p><strong>Description:</strong> @Model.Description</p>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <p><strong>Due Date:</strong> @Model.DueDate.ToString("yyyy-MM-dd")</p>
+                    </div>
+                </div>
+            </div>
+    @if (Context.Session.GetInt32("Role") == 2)
+        {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Sublission Link</th>
+                            <th>Submission Date</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var submission in ViewBag.SubmissionList)
+                    {
+                            <tr>
+                                <td>@submission.User.LastName @submission.User.FirstName</td>
+                                <td>@submission.FileLink</td>
+                                <td>@submission.SubmissionDate</td>
+                                <td>@submission.Grade</td>
+                                <td>
+                                @if(submission.Grade == null)
+                                {
+                                    <a onclick="grade('@submission.Id','@Model.Id')" class="btn btn-sm btn-danger">Grade</a>
+                                }
+                                </td>
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+        }
+    @if (Context.Session.GetInt32("Role") == 1)
+        {
+            
+        
+    <!-- SUBMISSION FORM -->
+                <div class="card shadow-lg p-4 mb-4">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Submit Your Assignment</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" asp-controller="AssignmentSubmission" asp-action="@(ViewBag.Submission == null ? "Create" : "Edit")">
+                            <input type="hidden" name="assignmentId" value="@Model.Id" />
+                            <input type="hidden" name="userId" value="@Context.Session.GetInt32("UserId")" />
+                            <div class="mb-3">
+                                <label for="submissionText" class="form-label"><strong>📜 Your Submission:</strong></label>
+                                <input type="text" name="fileLink" value="@(ViewBag.Submission!=null?ViewBag.Submission.FileLink:"")" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="submissionDate" class="form-label"><strong>📅 Submission Date:</strong></label>
+                                <input type="date" name="submissionDate" value="@(ViewBag.Submission!=null?ViewBag.Submission.SubmissionDate.ToString("yyyy-MM-dd"):"")" />
+                            </div>
+                            <!-- grade-->
+                            <div class="mb-3">
+                                <label for="grade" class="form-label"><strong>📊 Grade:</strong></label>
+                                <input type="number" name="grade" value="@(ViewBag.Submission!=null?ViewBag.Submission.Grade:"")" />
+                            </div>
+                        @if (ViewBag.Submission == null || ViewBag.Submission.Grade == null)
+                        {
+                            <button type="submit" class="btn btn-success">📤 Save</button>
+
+                        }
+                @if (ViewBag.Submission != null&&ViewBag.Submission.Grade==null)
+            {
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete('@ViewBag.Submission.Id','@Model.Id')">🔄 Delete</button>
+            }
+            </form>
+                    </div>
+                </div>
+        }       
+    }
+}
+<script>
+   function confirmDelete(submissionId,assignmentId) {
+        if (confirm("Are you sure you want to delete this submission?")) {
+            window.location.href = "/AssignmentSubmission/Delete?submissionId=" + submissionId + '&assignmentId='+assignmentId;
+        }
+   }
+    function grade(submissionId,assignmentId) {
+        var grade = prompt("Please enter your grade (0 - 10, max 1 decimal place):", "0");
+
+        // Kiểm tra nếu người dùng nhấn 'Cancel'
+        if (grade === null) return;
+
+        // Biểu thức chính quy kiểm tra số hợp lệ: từ 0 đến 10, tối đa 1 chữ số thập phân
+        var regex = /^(10(\.0)?|[0-9](\.[0-9])?)$/;
+
+        if (!regex.test(grade)) {
+            alert("Invalid grade! Please enter a number between 0 and 10 with at most one decimal place.");
+            return;
+        }
+
+        // Nếu hợp lệ, chuyển hướng để gửi điểm
+        window.location.href = "/AssignmentSubmission/Grade?submissionId=" + submissionId + "&grade=" + grade + '&assignmentId=' + assignmentId;
+    }
+
+</script>

@@ -186,6 +186,28 @@ namespace Edunext.Controllers
             }
         }
 
+        public IActionResult NormIndex(int classId, int? page)
+        {
+            var course=context.Classrooms.Select(cl=>cl.Course).FirstOrDefault(c=>c.Id==classId);
+            var courseId = course.Id;
+            int pageSize = 5; // Số item trên mỗi trang
+            int pageNumber = (page ?? 1);
+            //check if form is submitted
+            string search = Request.Query["searchString"];
+            ViewBag.classId = classId;
+            if (!string.IsNullOrEmpty(search))
+            {
+                var slots = context.Slots.Where(s => s.CourseId == courseId && s.Name.Contains(search) && s.IsDeleted == false).ToPagedList(pageNumber, pageSize);
+                ViewData["CurrentFilter"] = search;
+                return View(slots);
+            }
+            else
+            {
+                var slots = context.Slots.Where(s => s.CourseId == courseId && s.IsDeleted == false).OrderBy(u => u.Order).ToPagedList(pageNumber, pageSize);
+                return View(slots);
+            }
+        }
+
 
 
     }

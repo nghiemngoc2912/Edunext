@@ -49,7 +49,7 @@ namespace Edunext.Controllers
             }
             if(context.Courses.Any(c => c.Code == course.Code))
             {
-                ViewBag.Message = "Code exists";
+                ViewBag.Message = "Title exists";
                 return View(course);
             }
             course.UpdatedAt = DateTime.Now;
