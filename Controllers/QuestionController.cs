@@ -1,4 +1,5 @@
-﻿using Edunext.Models;
+﻿using Edunext.Filters;
+using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -6,6 +7,7 @@ using System.Globalization;
 
 namespace Edunext.Controllers
 {
+    [RoleFilter(1,2)]
     public class QuestionController : Controller
     {
         EdunextContext context = new EdunextContext();
@@ -17,6 +19,7 @@ namespace Edunext.Controllers
                 .FirstOrDefault(q => q.Id == id);
             return View(question);
         }
+        [RoleFilter(2)]
         [HttpPost]
         public IActionResult Create(IFormFile? file, int classSlotId)
         {
@@ -112,12 +115,14 @@ namespace Edunext.Controllers
             System.IO.File.WriteAllLines(errorFilePath, errors);
             return errorFilePath;
         }
+        [RoleFilter(2)]
         public IActionResult Edit(int id)
         {
             var question = context.Questions
                 .FirstOrDefault(a => a.Id == id);
             return View(question);
         }
+        [RoleFilter(2)]
         [HttpPost]
         public IActionResult Edit(Question question)
         {
@@ -148,6 +153,7 @@ namespace Edunext.Controllers
             TempData["Message"] = "Question updated successfully"; 
             return RedirectToAction("Details", "ClassSlotContent", new { id = question.ClassSlotId });
         }
+        [RoleFilter(2)]
         public IActionResult Delete(int id)
         {
             var question = context.Questions

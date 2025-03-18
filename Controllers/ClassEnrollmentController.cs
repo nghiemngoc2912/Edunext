@@ -1,4 +1,5 @@
-﻿using Edunext.Models;
+﻿using Edunext.Filters;
+using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -8,6 +9,7 @@ using X.PagedList.Extensions;
 
 namespace Edunext.Controllers
 {
+    [RoleFilter(3)]
     public class ClassEnrollmentController : Controller
     {
         EdunextContext context = new EdunextContext();

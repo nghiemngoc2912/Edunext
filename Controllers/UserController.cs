@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Text;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Edunext.Filters;
 
 namespace Edunext.Controllers
 {
@@ -56,7 +57,7 @@ namespace Edunext.Controllers
                 return View(user);
             }
         }
-        
+        [LoginFilter]
         public IActionResult Logout()
         {
             //clear session
@@ -70,6 +71,7 @@ namespace Edunext.Controllers
             user.Role = 1;
             return View(user);
         }
+
         [HttpPost]
         public IActionResult Register(User user)
         {
@@ -133,7 +135,8 @@ namespace Edunext.Controllers
                 return View(user);
             }
         }
-        
+
+        [RoleFilter(4)]
         public IActionResult Index(int? page)
         {
             //return list of users who are active
@@ -155,11 +158,13 @@ namespace Edunext.Controllers
             }
             
         }
+        [RoleFilter(4)]
         public IActionResult Create()
         {
             User user = new User();
             return View(user);
         }
+        [RoleFilter(4)]
         [HttpPost]
         public IActionResult Create(User user)
         {
@@ -226,11 +231,13 @@ namespace Edunext.Controllers
                 return View(user);
             }
         }
+        [RoleFilter(4)]
         public IActionResult Edit(int id)
         {
             User user = context.Users.Find(id);
             return View(user);
         }
+        [RoleFilter(4)]
         [HttpPost]
         public IActionResult Edit(User user)
         {
@@ -297,6 +304,7 @@ namespace Edunext.Controllers
                 return View(user);
             }
         }
+        [RoleFilter(4)]
         public IActionResult Delete(int id)
         {
             //khong xoa duoc admin

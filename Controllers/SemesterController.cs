@@ -1,10 +1,12 @@
-﻿using Edunext.Helpers;
+﻿using Edunext.Filters;
+using Edunext.Helpers;
 using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList.Extensions;
 
 namespace Edunext.Controllers
 {
+    [RoleFilter(3)]
     public class SemesterController : Controller
     {
         EdunextContext context = new EdunextContext();

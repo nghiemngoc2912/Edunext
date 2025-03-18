@@ -1,9 +1,11 @@
-﻿using Edunext.Models;
+﻿using Edunext.Filters;
+using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Edunext.Controllers
 {
+    [RoleFilter(1,2)]
     public class CommentController : Controller
     {
         EdunextContext context = new EdunextContext();

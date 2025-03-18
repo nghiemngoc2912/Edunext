@@ -1,4 +1,5 @@
-﻿using Edunext.Models;
+﻿using Edunext.Filters;
+using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -6,9 +7,11 @@ using X.PagedList.Extensions;
 
 namespace Edunext.Controllers
 {
+    [RoleFilter(1,2,3)]
     public class SlotController : Controller
     {
         EdunextContext context = new EdunextContext();
+        [RoleFilter(3)]
         public IActionResult Index(int courseId, int? page)
         {
             int pageSize = 5; // Số item trên mỗi trang
@@ -28,6 +31,7 @@ namespace Edunext.Controllers
                 return View(slots);
             }
         }
+        [RoleFilter(3)]
         [HttpPost]
         public IActionResult Create(IFormFile? file,int courseId)
         {
@@ -117,6 +121,7 @@ namespace Edunext.Controllers
             System.IO.File.WriteAllLines(errorFilePath, errors);
             return errorFilePath;
         }
+        [RoleFilter(3)]
         public IActionResult Edit(int id)
         {
             Slot slot = context.Slots.FirstOrDefault(s => s.Id == id);
@@ -130,6 +135,7 @@ namespace Edunext.Controllers
                 return View(slot);
             }
         }
+        [RoleFilter(3)]
         [HttpPost]
         public IActionResult Edit(Slot slot)
         {
@@ -169,6 +175,7 @@ namespace Edunext.Controllers
                 }
             }
         }
+        [RoleFilter(3)]
         public IActionResult Delete(int id,int courseId)
         {
             Slot slot=context.Slots.FirstOrDefault(s=>s.Id == id);
@@ -185,7 +192,7 @@ namespace Edunext.Controllers
                 return RedirectToAction("Index", new { courseId= slot.CourseId });
             }
         }
-
+        [RoleFilter(1,2)]
         public IActionResult NormIndex(int classId, int? page)
         {
             var course=context.Classrooms.Select(cl=>cl.Course).FirstOrDefault(c=>c.Id==classId);

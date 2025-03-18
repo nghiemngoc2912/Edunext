@@ -16,7 +16,7 @@
     <div class="col-md-12">
         <form method="post" enctype="multipart/form-data" asp-action="CreateEnrollments" asp-route-classroomId="@Model.ElementAt(0).ClassId">
             <input type="file" name="file" accept=".xlsx" required />
-            <button type="submit">Enroll new slots</button>
+            <button type="submit">Enroll new students</button>
         </form>
     </div>
 </div>
@@ -24,7 +24,7 @@
     if (Model.Count() == 0)
     {
         <div class="alert alert-info text-center">
-            No slots found.
+            No students found.
         </div>
     }
     else

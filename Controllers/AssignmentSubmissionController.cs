@@ -1,11 +1,14 @@
-﻿using Edunext.Models;
+﻿using Edunext.Filters;
+using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edunext.Controllers
 {
+    [RoleFilter(1,2)]
     public class AssignmentSubmissionController : Controller
     {
         EdunextContext context = new EdunextContext();
+        [RoleFilter(1)]
         [HttpPost]
         public IActionResult Create(int assignmentId, int userId, string fileLink)
         {
@@ -40,6 +43,7 @@ namespace Edunext.Controllers
             TempData["Message"] = "Assignment submitted successfully";
             return RedirectToAction("Details", "Assignment", new { id = assignmentId });
         }
+        [RoleFilter(1)]
         [HttpPost]
         public IActionResult Edit(int assignmentId, int userId, string fileLink)
         {
@@ -75,6 +79,7 @@ namespace Edunext.Controllers
             TempData["Message"] = "Assignment submitted successfully";
             return RedirectToAction("Details", "Assignment", new { id = assignmentId });
         }
+        [RoleFilter(1)]
         public IActionResult Delete(int submissionId, int assignmentId)
         {
             var assignmentSubmission = context.AssignmentSubmissions
@@ -89,6 +94,7 @@ namespace Edunext.Controllers
             TempData["Message"] = "Assignment submission deleted successfully";
             return RedirectToAction("Details", "Assignment", new { id = assignmentId });
         }
+        [RoleFilter(2)]
         public IActionResult Grade(int submissionId, decimal grade, int assignmentId)
         {
             var assignmentSubmission = context.AssignmentSubmissions

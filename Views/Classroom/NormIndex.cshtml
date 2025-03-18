@@ -65,6 +65,10 @@
                         <td>@classroom.Semester.Name</td>
                         <td>
                             <a asp-controller="Slot" asp-action="NormIndex" asp-route-classId="@classroom.Id" class="btn btn-primary">Slots List</a>
+                            @if(Context.Session.GetInt32("Role") == 2)
+                            {
+                                <a asp-action="statistic" asp-controller="Classroom" asp-route-id="@classroom.Id" class="btn btn-warning">Export Statistic</a>
+                            }
                         </td>
                     </tr>
                 }

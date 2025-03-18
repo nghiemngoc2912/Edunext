@@ -1,9 +1,12 @@
-﻿using Edunext.Models;
+﻿using Edunext.Filters;
+using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Edunext.Controllers
 {
+    [LoginFilter]
+    [RoleFilter(1, 2)]
     public class AssignmentController : Controller
     {
         EdunextContext context = new EdunextContext();
@@ -20,12 +23,14 @@ namespace Edunext.Controllers
                 .Where(s => s.AssignmentId == id);
             return View(assignment);
         }
+        [RoleFilter(2)]
         public IActionResult Create(int classSlotId)
         {
             var assignment = new Assignment();
             assignment.ClassSlotId = classSlotId;
             return View(assignment);
         }
+        [RoleFilter(2)]
         [HttpPost]
         public IActionResult Create(Assignment assignment)
         {
@@ -60,12 +65,14 @@ namespace Edunext.Controllers
                 return RedirectToAction("Details", "ClassSlotContent", new { id = assignment.ClassSlotId });
             }
         }
+        [RoleFilter(2)]
         public IActionResult Edit(int id)
         {
             var assignment = context.Assignments
                 .FirstOrDefault(a => a.Id == id);
             return View(assignment);
         }
+        [RoleFilter(2)]
         [HttpPost]
         public IActionResult Edit(Assignment assignment)
         {
@@ -106,6 +113,7 @@ namespace Edunext.Controllers
                 return RedirectToAction("Details", "ClassSlotContent", new { id = assignment.ClassSlotId });
             }
         }
+        [RoleFilter(2)]
         public IActionResult Delete(int id)
         {
             var assignment = context.Assignments

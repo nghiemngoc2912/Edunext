@@ -1,4 +1,5 @@
-﻿using Edunext.Models;
+﻿using Edunext.Filters;
+using Edunext.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -9,6 +10,7 @@ namespace Edunext.Controllers
     public class ClassroomController : Controller
     {
         EdunextContext context = new EdunextContext();
+        [RoleFilter(3)]
         public IActionResult Index(int? page)
         {
             int pageSize = 5; // Số item trên mỗi trang
@@ -28,6 +30,7 @@ namespace Edunext.Controllers
             }
             
         }
+        [RoleFilter(1,2)]
         public IActionResult NormIndex(int? page,int? userId) {
             int pageSize = 5; // Số item trên mỗi trang
             int pageNumber = (page ?? 1);
@@ -54,6 +57,7 @@ namespace Edunext.Controllers
                 return View(classes);
             }
         }
+        [RoleFilter(3)]
         [HttpPost]
         public IActionResult CreateClasses(IFormFile? file)
         {
@@ -180,6 +184,7 @@ namespace Edunext.Controllers
             System.IO.File.WriteAllLines(errorFilePath, errors);
             return errorFilePath;
         }
+        [RoleFilter(3)]
         public IActionResult Edit(int id)
         {
             var classroom = context.Classrooms
@@ -200,6 +205,7 @@ namespace Edunext.Controllers
                 return View(classroom);
             }
         }
+        [RoleFilter(3)]
         [HttpPost]
         public IActionResult Edit(Classroom c)
         {
@@ -258,7 +264,7 @@ namespace Edunext.Controllers
         }
 
 
-
+        [RoleFilter(3)]
         public IActionResult Delete(int id)
         {
             Classroom classroom = context.Classrooms.Find(id);
@@ -269,6 +275,85 @@ namespace Edunext.Controllers
             context.SaveChanges();
             TempData["Message"] = "Delete classroom successfully";
             return RedirectToAction("Index");
+        }
+        [RoleFilter(2)]
+        public IActionResult Statistic(int id)
+        {
+            var students = context.ClassEnrollments
+                .Where(e => e.ClassId == id)
+                .Select(e => e.User)
+                .ToList();
+
+            var assignments = context.ClassSlotContents
+                .Where(c => c.ClassId == id)
+                .SelectMany(c => c.Assignments) // Flatten the collection
+                .ToList();
+
+
+            var commentData = context.Comments
+                .Where(c => c.Question.ClassSlot.ClassId == id) // Get only comments from questions in this class
+                .GroupBy(c => c.UserId)
+                .Select(g => new { StudentId = g.Key, CommentCount = g.Count() })
+                .ToDictionary(x => x.StudentId, x => x.CommentCount);
+
+            var grades = context.AssignmentSubmissions
+                .Where(s => s.Assignment.ClassSlot.ClassId == id)
+                .ToList();
+            ExcelPackage.License.SetNonCommercialOrganization("My Noncommercial organization"); //This will also set the Company property to the organization name provided in the argument.
+            using (var package = new ExcelPackage())
+            {
+                // === SHEET 1: Comments ===
+                var ws1 = package.Workbook.Worksheets.Add("Student Comments");
+                ws1.Cells["A1"].Value = "Student ID";
+                ws1.Cells["B1"].Value = "Student Name";
+                ws1.Cells["C1"].Value = "Comments Count";
+
+                int row1 = 2;
+                foreach (var student in students)
+                {
+                    ws1.Cells[row1, 1].Value = student.Id;
+                    ws1.Cells[row1, 2].Value = student.FirstName+ " "+student.LastName;
+                    ws1.Cells[row1, 3].Value = commentData.ContainsKey(student.Id) ? commentData[student.Id] : 0;
+                    row1++;
+                }
+
+                ws1.Cells[1, 1, row1 - 1, 3].AutoFitColumns();
+
+                // === SHEET 2: Assignments & Grades ===
+                var ws2 = package.Workbook.Worksheets.Add("Assignment Grades");
+                ws2.Cells["A1"].Value = "Student ID";
+                ws2.Cells["B1"].Value = "Student Name";
+
+                int col = 3;
+                foreach (var assignment in assignments)
+                {
+                    ws2.Cells[1, col].Value = assignment.Title;
+                    col++;
+                }
+
+                int row2 = 2;
+                foreach (var student in students)
+                {
+                    ws2.Cells[row2, 1].Value = student.Id;
+                    ws2.Cells[row2, 2].Value = student.FirstName + " " + student.LastName;
+
+                    col = 3;
+                    foreach (var assignment in assignments)
+                    {
+                        var grade = grades.FirstOrDefault(g => g.Id == student.Id && g.AssignmentId == assignment.Id);
+                        ws2.Cells[row2, col].Value = grade?.Grade ?? 0;
+                        col++;
+                    }
+                    row2++;
+                }
+
+                ws2.Cells[1, 1, row2 - 1, col - 1].AutoFitColumns();
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ClassReport.xlsx");
+            }
         }
     }
 }
