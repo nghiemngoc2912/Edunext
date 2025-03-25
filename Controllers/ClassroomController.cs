@@ -28,7 +28,6 @@ namespace Edunext.Controllers
                 var classes = context.Classrooms.Include(c => c.Course).Include(c => c.Teacher).Include(c => c.Semester).Where(c => c.IsDeleted == false).OrderBy(u => u.Id).ToPagedList(pageNumber, pageSize);
                 return View(classes);
             }
-            
         }
         [RoleFilter(1,2)]
         public IActionResult NormIndex(int? page,int? userId) {

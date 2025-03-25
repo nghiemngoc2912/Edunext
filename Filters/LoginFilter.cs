@@ -12,7 +12,7 @@ public class LoginFilter : Attribute, IAuthorizationFilter
         // Kiểm tra nếu Role không tồn tại (chưa đăng nhập)
         if (role == null)
         {
-            context.Result = new RedirectToActionResult("Login", "Account", null);
+            context.Result = new RedirectToActionResult("Login", "User", null);
         }
     }
 }

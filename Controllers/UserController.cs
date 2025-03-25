@@ -114,7 +114,7 @@ namespace Edunext.Controllers
             User user2 = context.Users.Where(u => u.Code == user.Code).FirstOrDefault();
             if (user2 != null)
             {
-                this.ViewBag.Message = "Title already exists";
+                this.ViewBag.Message = "Code already exists";
                 return View(user);
             }
             //check email already exists
